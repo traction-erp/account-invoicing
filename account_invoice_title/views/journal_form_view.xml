@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_account_journal_form_inherit_pdf_titles" model="ir.ui.view">
+    <field name="name">account.journal.form.pdf.titles</field>
+    <field name="model">account.journal</field>
+    <field name="inherit_id" ref="account.view_account_journal_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='advanced_settings']//field[@name='invoice_reference_type']/ancestor::group[1]" position="after">
+        <group string="Invoice PDF Titles" invisible="type != 'sale'">
+          <group>
+            <field name="invoice_use_custom_title"/>
+            <field name="invoice_custom_title" invisible="not invoice_use_custom_title" placeholder="e.g. Tax Invoice"/>
+          </group>
+          <group>
+            <field name="credit_note_use_custom_title"/>
+            <field name="credit_note_custom_title" invisible="not credit_note_use_custom_title" placeholder="e.g. Credit Memo"/>
+          </group>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

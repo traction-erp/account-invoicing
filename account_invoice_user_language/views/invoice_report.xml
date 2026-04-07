@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Force invoice report language to current user's language -->
+    <template id="report_invoice_lang_user" inherit_id="account.report_invoice">
+        <!-- Replace the lang variable that is normally set from o.partner_id.lang -->
+        <xpath expr="//t[@t-set='lang' and contains(@t-value, 'partner_id.lang')]" position="replace">
+            <t t-set="lang" t-value="(env.context.get('report_lang') or user.lang or 'en_US')"/>
+        </xpath>
+    </template>
+</odoo>

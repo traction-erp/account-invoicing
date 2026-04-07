@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Flip sign in the invoice lines table -->
+  <template id="report_invoice_document_refund_negative" inherit_id="account.report_invoice_document">
+
+    <!-- Unit Price -->
+    <xpath expr="//td[@name='td_price_unit']//span[@t-field='line.price_unit']" position="replace">
+      <span class="text-nowrap"
+            t-out="o._pdf_refund_sign() * line.price_unit"
+            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+    </xpath>
+
+    <!-- Amount/Subtotal -->
+    <xpath expr="//td[@name='td_subtotal']//span[@t-field='line.price_subtotal']" position="replace">
+      <span class="text-nowrap"
+            t-out="o._pdf_refund_sign() * line.price_subtotal"
+            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+    </xpath>
+
+    <!-- Section subtotal (current_subtotal) -->
+    <xpath expr="//tr[contains(@class,'is-subtotal')]//span[@t-out='current_subtotal']" position="attributes">
+      <attribute name="t-out">o._pdf_refund_sign() * current_subtotal</attribute>
+    </xpath>
+
+  </template>
+
+  <!-- Flip sign in tax totals summary (invoice currency) -->
+  <template id="document_tax_totals_template_refund_negative" inherit_id="account.document_tax_totals_template">
+
+    <xpath expr='//span[@t-out="subtotal[&apos;base_amount_currency&apos;]"]' position="attributes">
+      <attribute name="t-out">o._pdf_refund_sign() * subtotal['base_amount_currency']</attribute>
+    </xpath>
+
+    <xpath expr='//span[@t-out="tax_group[&apos;tax_amount_currency&apos;]"]' position="attributes">
+      <attribute name="t-out">o._pdf_refund_sign() * tax_group['tax_amount_currency']</attribute>
+    </xpath>
+
+    <xpath expr='//span[@t-out="tax_group[&apos;display_base_amount_currency&apos;]"]' position="attributes">
+      <attribute name="t-out">o._pdf_refund_sign() * tax_group['display_base_amount_currency']</attribute>
+    </xpath>
+
+    <xpath expr='//span[@t-out="tax_totals[&apos;cash_rounding_base_amount_currency&apos;]"]' position="attributes">
+      <attribute name="t-out">o._pdf_refund_sign() * tax_totals['cash_rounding_base_amount_currency']</attribute>
+    </xpath>
+
+    <xpath expr='//strong[@t-out="tax_totals[&apos;total_amount_currency&apos;]"]' position="attributes">
+      <attribute name="t-out">o._pdf_refund_sign() * tax_totals['total_amount_currency']</attribute>
+    </xpath>
+
+  </template>
+
+</odoo>

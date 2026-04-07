@@ -1,0 +1,39 @@
+<!-- s3_invoice_remittance/views/report_invoice_remittance.xml -->
+<odoo>
+  <template id="report_invoice_remittance_block" inherit_id="account.report_invoice_document">
+
+    <!-- define one boolean + data once -->
+    <xpath expr="//div[@class='mb-3'][p[@name='payment_communication']]" position="before">
+      <t t-set="remit_enabled" t-value="o._is_invoice_remittance_enabled()"/>
+      <t t-set="remit" t-value="o._get_invoice_remittance_data()"/>
+
+      <t t-if="remit_enabled">
+        <p class="mt-2">
+          <strong>Please transfer the total amount to this account:</strong><br/>
+          Beneficiary name: <span t-esc="remit.get('beneficiary_name') or ''"/><br/>
+          Beneficiary bank: <span t-esc="remit.get('beneficiary_bank') or ''"/><br/>
+          SWIFT: <span t-esc="remit.get('swift') or ''"/><br/>
+
+          <!-- clearing code line for modes that want it -->
+          <t t-if="remit.get('mode') in ('with_clearing', 'uk_with_account_no') and remit.get('clearing_code')">
+            Bank / Clearing code: <span t-esc="remit.get('clearing_code')"/><br/>
+          </t>
+
+          <!-- NEW: UK-style account number (8 digits derived from IBAN) -->
+          <t t-if="remit.get('mode') == 'uk_with_account_no' and remit.get('account_no_8')">
+            Account No: <span t-esc="remit.get('account_no_8')"/><br/>
+          </t>
+
+          IBAN: <span t-esc="remit.get('iban') or ''"/><br/>
+          Due date: <span t-esc="remit.get('due_date') or ''"/>
+        </p>
+      </t>
+    </xpath>
+
+    <!-- hide the original block when selection is enabled -->
+    <xpath expr="//p[@name='payment_communication']" position="attributes">
+      <attribute name="t-if">not remit_enabled</attribute>
+    </xpath>
+
+  </template>
+</odoo>
